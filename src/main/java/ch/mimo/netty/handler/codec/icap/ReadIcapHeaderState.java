@@ -30,6 +30,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 public class ReadIcapHeaderState extends State<Object> {
 	
 	private static final String SYNTHETIC_ENCAPSULATED_HEADER_VALUE = "null-body=0";
+	private static final String SYNTHETIC_ENCAPSULATED_HOST_VALUE = "";
 	
 	public ReadIcapHeaderState(String name) {
 		super(name);
@@ -136,6 +137,13 @@ public class ReadIcapHeaderState extends State<Object> {
 		
 		if(requiresSynthecticEncapsulationHeader) {
 			message.addHeader(IcapHeaders.Names.ENCAPSULATED,SYNTHETIC_ENCAPSULATED_HEADER_VALUE);
+		}
+
+		// By RFC Host header is mandatory, but so many clients violates this rule for OPTIONS so... 
+		if(!message.containsHeader(IcapHeaders.Names.HOST)) {
+			if(message instanceof IcapRequest && ((IcapRequest)message).getMethod().equals(IcapMethod.OPTIONS)) {
+				message.addHeader(IcapHeaders.Names.HOST,SYNTHETIC_ENCAPSULATED_HOST_VALUE);
+			}
 		}
 	}
 }

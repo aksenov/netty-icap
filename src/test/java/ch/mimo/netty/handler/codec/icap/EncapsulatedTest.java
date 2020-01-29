@@ -157,7 +157,8 @@ public class EncapsulatedTest extends Assert {
 			e.printStackTrace();
 			fail("Encapsualted encoding failed");
 		}
-		assertEquals("encoded encapsulation header was wrong","Encapsulated: req-hdr=0, res-hdr=123, null-body=0\r\n\r\n",buffer.toString(Charset.defaultCharset()));
+		System.out.println(buffer.toString(Charset.defaultCharset()));
+		assertEquals("encoded encapsulation header was wrong","Encapsulated: null-body=0, req-hdr=0, res-hdr=123\r\n\r\n",buffer.toString(Charset.defaultCharset()));
 		assertEquals("wrong body element found",IcapMessageElementEnum.NULLBODY,encapsulated.containsBodyEntry());
 	}
 }
